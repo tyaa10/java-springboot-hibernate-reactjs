@@ -6,18 +6,20 @@ import javax.persistence.*;
 import java.util.Set;
 
 @Entity
-@Table(name = "Categories")
+@Table(name = "Users")
 @Data
-@EqualsAndHashCode(exclude = "products")
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
-public class Category {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(name = "name", nullable = false, unique = true)
     private String name;
-    @OneToMany(mappedBy="category")
-    private Set<Product> products;
+    @Column(name = "password", nullable = false)
+    private String password;
+    @ManyToOne
+    @JoinColumn(name="role_id", nullable = false)
+    private Role role;
 }

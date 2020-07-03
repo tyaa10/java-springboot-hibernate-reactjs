@@ -1,6 +1,8 @@
 package org.tyaa.demo.springboot.simplespa.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
@@ -8,6 +10,8 @@ import java.math.BigDecimal;
 
 @Data
 @Builder(toBuilder = true)
+@JsonIgnoreProperties(ignoreUnknown = true)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PaymentModel {
     private Long id;
     private String transactionId;
