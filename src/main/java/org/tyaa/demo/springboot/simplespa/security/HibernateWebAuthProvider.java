@@ -29,11 +29,9 @@ public class HibernateWebAuthProvider implements AuthenticationProvider {
 
         String name = a.getName();
         String password = a.getCredentials().toString();
-        System.out.println(password);
         User user = null;
         try {
             user = userDAO.findUserByName(name);
-            System.out.println(user);
         } catch (Exception ex) {
             Logger.getLogger(HibernateWebAuthProvider.class.getName()).log(Level.SEVERE, null, ex);
         }

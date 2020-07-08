@@ -14,8 +14,8 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseModel {
-    public static String SUCCESS_STATUS = "success";
-    public static String FAIL_STATUS = "fail";
+    public static final String SUCCESS_STATUS = "success";
+    public static final String FAIL_STATUS = "fail";
     private String status;
     private String message;
     private Object data;

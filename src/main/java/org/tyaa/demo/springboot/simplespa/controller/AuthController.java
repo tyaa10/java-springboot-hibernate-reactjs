@@ -10,8 +10,6 @@ import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 import org.tyaa.demo.springboot.simplespa.model.UserRequestModel;
 import org.tyaa.demo.springboot.simplespa.service.AuthService;
 
-import javax.servlet.http.HttpSession;
-
 @RestController
 @RequestMapping("/api/auth")
 public class AuthController {
@@ -71,7 +69,7 @@ public class AuthController {
 
     @GetMapping("/user/signedout")
     public ResponseEntity<ResponseModel> signedOut() {
-        return new ResponseEntity<>(authService.onSignOut(), HttpStatus.NO_CONTENT);
+        return new ResponseEntity<>(authService.onSignOut(), HttpStatus.OK);
     }
 
     @GetMapping("/user/onerror")
