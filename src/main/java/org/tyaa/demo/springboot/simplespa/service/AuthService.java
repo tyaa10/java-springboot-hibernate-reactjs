@@ -32,12 +32,13 @@ public class AuthService {
     public ResponseModel createRole(Role role) {
         roleDao.save(role);
         return ResponseModel.builder()
-                .status(ResponseModel.SUCCESS_STATUS)
-                .message(String.format("%s Role Created", role.getName()))
-                .build();
+            .status(ResponseModel.SUCCESS_STATUS)
+            .message(String.format("%s Role Created", role.getName()))
+            .build();
     }
 
     public ResponseModel createUser(UserRequestModel userRequestModel) {
+        System.err.println(userRequestModel);
         User user =
             User.builder()
                 .name(userRequestModel.getName())

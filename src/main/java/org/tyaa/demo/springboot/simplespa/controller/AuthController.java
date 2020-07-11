@@ -47,7 +47,16 @@ public class AuthController {
 
     @PostMapping("/user")
     public ResponseEntity<ResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) {
-        return new ResponseEntity<>(authService.createUser(userRequestModel), HttpStatus.CREATED);
+        ResponseModel responseModel =
+                authService.createUser(userRequestModel);
+        return new ResponseEntity<>(
+                responseModel,
+                (responseModel.getMessage().toLowerCase().contains("created"))
+                        ? HttpStatus.CREATED
+                        : responseModel.getMessage().contains("name")
+                            ? HttpStatus.CONFLICT
+                            : HttpStatus.BAD_GATEWAY
+        );
     }
 
     @DeleteMapping(value = "/user/{id}")
@@ -75,5 +84,10 @@ public class AuthController {
     @GetMapping("/user/onerror")
     public ResponseEntity<ResponseModel> onError() {
         return new ResponseEntity<>(authService.onError(), HttpStatus.UNAUTHORIZED);
+    }
+
+    @PutMapping(value = "/user/{id}/makeadmin")
+    public ResponseEntity<ResponseModel> makeUserAdmin(@PathVariable Long id) throws Exception {
+        return new ResponseEntity<>(authService.makeUserAdmin(id), HttpStatus.OK);
     }
 }

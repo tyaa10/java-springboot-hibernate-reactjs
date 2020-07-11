@@ -8,8 +8,8 @@
                         <form id="signup-form" class="col s12">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="login" name="login" type="text" class="validate" required>
-                                    <label for="login">Login</label>
+                                    <input id="login" name="login" type="text" class="validate" required pattern="[A-z]{1,25}">
+                                    <label for="login">Login (1-25 latin letters)</label>
                                 </div>
                             </div>
                             <div class="row">
@@ -40,14 +40,11 @@
             $signUpForms.submit(function (ev) {
                 ev.preventDefault()
                 const signUpForm = $signUpForms[0]
-                console.log(signUpForm)
-                console.log(signUpForm.checkValidity())
                 if (signUpForm.checkValidity()) {
                     const formData = {
                         name: signUpForm.login.value,
                         password: signUpForm.password.value
                     }
-                    console.log(formData)
                     $.ajax({
                         url: "api/auth/user"
                         , data: JSON.stringify(formData)
@@ -55,17 +52,23 @@
                         , dataType : "json"
                         , contentType : "application/json"
                     }).done(function (resp) {
-                        console.log(resp)
                         if (resp && resp.status && resp.status === "success") {
                             signUpForm.reset();
                             window.location = "#!signin";
                         } else {
-                            if (resp && resp.status) {
+                            if (resp && resp.message) {
                                 alert("Error: " + resp.message);
                             }
                         }
-                    }).fail(function () {
-                        alert("Fatal error")
+                    }).always(function (resp) {
+                        console.log(resp)
+                        if (resp && resp.status && resp.status == 409) {
+                            alert("Error: this username is already taken");
+                        } else if (resp && resp.status && resp.status === "success") {
+                            alert("Registration successfully completed");
+                        } else {
+                            alert("Unknown error");
+                        }
                     })
                     /* const formData = $(this).serialize()
                     $.ajax({

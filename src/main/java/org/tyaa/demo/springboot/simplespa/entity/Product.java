@@ -18,9 +18,9 @@ public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 25)
     private String name;
-    @Column(name = "description", nullable = false)
+    @Column(name = "description", nullable = false, length = 500)
     private String description;
     @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10,2)")
     private BigDecimal price;

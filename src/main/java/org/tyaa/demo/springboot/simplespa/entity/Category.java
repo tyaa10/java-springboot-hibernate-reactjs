@@ -16,7 +16,7 @@ public class Category {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name", nullable = false, unique = true, length = 25)
     private String name;
     @OneToMany(mappedBy="category")
     private Set<Product> products;

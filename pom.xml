@@ -19,6 +19,7 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<maven.compiler.target>1.8</maven.compiler.target>
 		<maven.compiler.source>1.8</maven.compiler.source>
+		<thin-jar.version>1.0.20.RELEASE</thin-jar.version>
 	</properties>
 
 	<dependencies>
@@ -33,6 +34,16 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.8.13</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.8.13</version>
 		</dependency>
 
 		<dependency>
@@ -66,7 +77,42 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>aspectj-maven-plugin</artifactId>
+				<version>1.11</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+					<proc>none</proc>
+					<complianceLevel>${java.version}</complianceLevel>
+					<showWeaveInfo>true</showWeaveInfo>
+					<forceAjcCompile>true</forceAjcCompile>
+					<sources/>
+					<weaveDirectories>
+						<weaveDirectory>${project.build.directory}/classes</weaveDirectory>
+					</weaveDirectories>
+				</configuration>
+				<executions>
+					<execution>
+						<goals>
+							<goal>compile</goal>
+						</goals>
+					</execution>
+				</executions>
+				<dependencies>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjtools</artifactId>
+						<version>1.8.13</version>
+					</dependency>
+					<dependency>
+						<groupId>org.aspectj</groupId>
+						<artifactId>aspectjrt</artifactId>
+						<version>1.8.13</version>
+					</dependency>
+				</dependencies>
+			</plugin>
 		</plugins>
 	</build>
-
 </project>
