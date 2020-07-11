@@ -4,18 +4,16 @@ import org.aspectj.lang.ProceedingJoinPoint;
 import org.aspectj.lang.annotation.Around;
 import org.aspectj.lang.annotation.Aspect;
 import org.hibernate.exception.ConstraintViolationException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 import org.tyaa.demo.springboot.simplespa.util.ErrorsGetter;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
+@Configuration
 @Aspect
 public class ExceptionsProcessor {
 
-    @Around("call(* org.tyaa.demo.springboot.simplespa.dao.*.*(..))")
+    // @Around("call(* org.tyaa.demo.springboot.simplespa.dao.*.*(..))")
+    @Around("execution(* org.tyaa.demo.springboot.simplespa.dao.*.*(..))")
     public Object onDaoException(ProceedingJoinPoint pjp) throws Exception {
         Object output = null;
         try {
@@ -32,12 +30,14 @@ public class ExceptionsProcessor {
         return output;
     }
 
-    @Around("call(* org.tyaa.demo.springboot.simplespa.service.*.*(..))")
+    // @Around("call(* org.tyaa.demo.springboot.simplespa.service.*.*(..))")
+    @Around("execution(* org.tyaa.demo.springboot.simplespa.service.*.*(..))")
     public Object onServiceException(ProceedingJoinPoint pjp) {
         Object output = null;
         try {
             output = pjp.proceed();
         } catch (ConstraintViolationException ex) {
+            System.out.println("my service error");
             output =
                 ResponseModel.builder()
                     .status(ResponseModel.FAIL_STATUS)

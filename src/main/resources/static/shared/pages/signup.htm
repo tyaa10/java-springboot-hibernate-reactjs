@@ -36,7 +36,7 @@
         const $page = $(this)
         const $signUpForms = $page.find('#signup-form')
         return function (param) {
-            $signUpForms.unbind('click')
+            $signUpForms.unbind('submit')
             $signUpForms.submit(function (ev) {
                 ev.preventDefault()
                 const signUpForm = $signUpForms[0]

@@ -49,6 +49,7 @@ public class AuthController {
     public ResponseEntity<ResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) {
         ResponseModel responseModel =
                 authService.createUser(userRequestModel);
+        System.out.println("responseModel = " + responseModel);
         return new ResponseEntity<>(
                 responseModel,
                 (responseModel.getMessage().toLowerCase().contains("created"))
