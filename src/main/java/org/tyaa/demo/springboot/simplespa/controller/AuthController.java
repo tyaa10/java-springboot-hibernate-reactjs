@@ -5,9 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
-import org.tyaa.demo.springboot.simplespa.entity.Role;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
-import org.tyaa.demo.springboot.simplespa.model.UserRequestModel;
+import org.tyaa.demo.springboot.simplespa.model.RoleModel;
+import org.tyaa.demo.springboot.simplespa.model.UserModel;
 import org.tyaa.demo.springboot.simplespa.service.AuthService;
 
 @RestController
@@ -24,8 +24,8 @@ public class AuthController {
     }
 
     @PostMapping("/admin/role")
-    public ResponseEntity<ResponseModel> createRole(@RequestBody Role role) {
-        return new ResponseEntity<>(authService.createRole(role), HttpStatus.CREATED);
+    public ResponseEntity<ResponseModel> createRole(@RequestBody RoleModel roleModel) {
+        return new ResponseEntity<>(authService.createRole(roleModel), HttpStatus.CREATED);
     }
 
     @DeleteMapping(value = "/role/{id}")
@@ -46,10 +46,9 @@ public class AuthController {
     }
 
     @PostMapping("/user")
-    public ResponseEntity<ResponseModel> createUser(@RequestBody UserRequestModel userRequestModel) {
+    public ResponseEntity<ResponseModel> createUser(@RequestBody UserModel userModel) {
         ResponseModel responseModel =
-                authService.createUser(userRequestModel);
-        System.out.println("responseModel = " + responseModel);
+                authService.createUser(userModel);
         return new ResponseEntity<>(
                 responseModel,
                 (responseModel.getMessage().toLowerCase().contains("created"))

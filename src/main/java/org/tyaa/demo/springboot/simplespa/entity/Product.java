@@ -24,6 +24,8 @@ public class Product {
     private String description;
     @Column(name = "price", nullable = false, columnDefinition = "DECIMAL(10,2)")
     private BigDecimal price;
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
     @Lob
     @Column(name = "image")
     private String image;

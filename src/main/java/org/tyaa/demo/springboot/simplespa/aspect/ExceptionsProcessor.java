@@ -19,7 +19,6 @@ public class ExceptionsProcessor {
         try {
             output = pjp.proceed();
         } catch (Exception ex) {
-            System.out.println("sql error is " + ErrorsGetter.getException(ex));
             if (ErrorsGetter.getException(ex).contains("ConstraintViolationException")){
                 throw new ConstraintViolationException("", null, "");
             }
@@ -37,7 +36,6 @@ public class ExceptionsProcessor {
         try {
             output = pjp.proceed();
         } catch (ConstraintViolationException ex) {
-            System.out.println("my service error");
             output =
                 ResponseModel.builder()
                     .status(ResponseModel.FAIL_STATUS)

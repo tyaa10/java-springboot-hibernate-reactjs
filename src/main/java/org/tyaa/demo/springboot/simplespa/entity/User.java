@@ -17,7 +17,7 @@ public class User {
     private Long id;
     @Column(name = "name", nullable = false, unique = true, length = 25)
     private String name;
-    @Column(name = "password", nullable = false, length = 16)
+    @Column(name = "password", nullable = false)
     private String password;
     @ManyToOne
     @JoinColumn(name="role_id", nullable = false)

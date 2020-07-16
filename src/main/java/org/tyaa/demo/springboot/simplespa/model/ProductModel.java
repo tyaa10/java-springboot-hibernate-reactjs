@@ -5,11 +5,17 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.Builder;
 import lombok.Data;
 
+import java.math.BigDecimal;
+
 @Data
 @Builder(toBuilder = true)
 @JsonIgnoreProperties(ignoreUnknown = true)
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class UserRequestModel {
+public class ProductModel {
     private String name;
-    private String password;
+    private String description;
+    private BigDecimal price;
+    private Integer quantity;
+    private String image;
+    private Long categoryId;
 }

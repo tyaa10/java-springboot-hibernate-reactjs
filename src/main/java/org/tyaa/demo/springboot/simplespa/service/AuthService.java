@@ -2,8 +2,8 @@ package org.tyaa.demo.springboot.simplespa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.tyaa.demo.springboot.simplespa.dao.RoleHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.dao.UserHibernateDAO;
@@ -12,7 +12,6 @@ import org.tyaa.demo.springboot.simplespa.entity.User;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 import org.tyaa.demo.springboot.simplespa.model.RoleModel;
 import org.tyaa.demo.springboot.simplespa.model.UserModel;
-import org.tyaa.demo.springboot.simplespa.model.UserRequestModel;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -23,12 +22,16 @@ import java.util.stream.Collectors;
 public class AuthService {
 
     @Autowired
+    public PasswordEncoder passwordEncoder;
+
+    @Autowired
     private RoleHibernateDAO roleDao;
 
     @Autowired
     private UserHibernateDAO userDao;
 
-    public ResponseModel createRole(Role role) {
+    public ResponseModel createRole(RoleModel roleModel) {
+        Role role = Role.builder().name(roleModel.name).build();
         roleDao.save(role);
         return ResponseModel.builder()
             .status(ResponseModel.SUCCESS_STATUS)
@@ -36,11 +39,11 @@ public class AuthService {
             .build();
     }
 
-    public ResponseModel createUser(UserRequestModel userRequestModel) {
+    public ResponseModel createUser(UserModel userModel) {
         User user =
             User.builder()
-                .name(userRequestModel.getName())
-                .password(userRequestModel.getPassword())
+                .name(userModel.getName())
+                .password(passwordEncoder.encode(userModel.getPassword()))
                 .role(roleDao.findRoleByName("user"))
                 .build();
         userDao.save(user);
@@ -88,7 +91,7 @@ public class AuthService {
         } else {
             return ResponseModel.builder()
                 .status(ResponseModel.FAIL_STATUS)
-                .message("No Users: Role #" + roleId + " Not Found")
+                .message(String.format("No Users: Role #%d Not Found", roleId))
                 .build();
         }
     }
@@ -116,11 +119,11 @@ public class AuthService {
                     .name(authentication.getName())
                     .build();
             response.setStatus(ResponseModel.SUCCESS_STATUS);
-            response.setMessage(String.format("User %s signed in", userModel.name));
+            response.setMessage(String.format("User %s Signed In", userModel.name));
             response.setData(userModel);
         } else {
             response.setStatus(ResponseModel.FAIL_STATUS);
-            response.setMessage("User is a guest");
+            response.setMessage("User is a Guest");
         }
         return response;
     }
@@ -154,7 +157,7 @@ public class AuthService {
         } else {
             return ResponseModel.builder()
                 .status(ResponseModel.FAIL_STATUS)
-                .message(String.format("User #%s Not Found", id))
+                .message(String.format("User #%d Not Found", id))
                 .build();
         }
     }
