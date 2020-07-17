@@ -9,6 +9,7 @@ import java.util.Set;
 @Table(name = "Categories")
 @Data
 @EqualsAndHashCode(exclude = "products")
+@ToString(exclude = "products")
 @Builder(toBuilder = true)
 @NoArgsConstructor
 @AllArgsConstructor
@@ -18,6 +19,6 @@ public class Category {
     private Long id;
     @Column(name = "name", nullable = false, unique = true, length = 25)
     private String name;
-    @OneToMany(mappedBy="category")
+    @OneToMany(mappedBy="category", fetch = FetchType.LAZY)
     private Set<Product> products;
 }

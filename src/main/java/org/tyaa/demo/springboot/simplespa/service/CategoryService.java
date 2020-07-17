@@ -4,11 +4,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.tyaa.demo.springboot.simplespa.dao.CategoryHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
+import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -17,20 +19,31 @@ public class CategoryService {
     @Autowired
     private CategoryHibernateDAO dao;
 
-    public ResponseModel create(Category category) {
+    public ResponseModel create(CategoryModel categoryModel) {
+        Category category =
+            Category.builder().name(categoryModel.getName()).build();
         dao.save(category);
         return ResponseModel.builder()
-                .status(ResponseModel.SUCCESS_STATUS)
-                .message(String.format("Category %s Created", category.getName()))
-                .build();
+            .status(ResponseModel.SUCCESS_STATUS)
+            .message(String.format("Category %s Created", category.getName()))
+            .build();
     }
 
     public ResponseModel getAll() {
         List<Category> categories = dao.findAll();
+        List<CategoryModel> categoryModels =
+            categories.stream()
+            .map(c ->
+                CategoryModel.builder()
+                    .id(c.getId())
+                    .name(c.getName())
+                    .build()
+            )
+            .collect(Collectors.toList());
         return ResponseModel.builder()
-                .status(ResponseModel.SUCCESS_STATUS)
-                .data(categories)
-                .build();
+            .status(ResponseModel.SUCCESS_STATUS)
+            .data(categoryModels)
+            .build();
     }
 
     public ResponseModel delete(Long id) {

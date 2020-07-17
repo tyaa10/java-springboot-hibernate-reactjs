@@ -1,17 +1,20 @@
 package org.tyaa.demo.springboot.simplespa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.tyaa.demo.springboot.simplespa.dao.CategoryHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.dao.ProductHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.entity.Product;
+import org.tyaa.demo.springboot.simplespa.model.ProductFilterModel;
 import org.tyaa.demo.springboot.simplespa.model.ProductModel;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -72,5 +75,30 @@ public class ProductService {
                 .message(String.format("Product #%d Not Found", id))
                 .build();
         }
+    }
+
+    public ResponseModel getFiltered(ProductFilterModel filter) {
+        List<Product> products =
+            productDao.findByCategoryIds(
+                filter.categories,
+                Sort.by(filter.sortingDirection, filter.orderBy)
+            );
+        List<ProductModel> productModels =
+            products.stream()
+            .map((p)->
+                ProductModel.builder()
+                    .name(p.getName())
+                    .description(p.getDescription())
+                    .price(p.getPrice())
+                    .quantity(p.getQuantity())
+                    .categoryId(p.getCategory().getId())
+                    .build()
+            )
+            .collect(Collectors.toList());
+
+        return ResponseModel.builder()
+            .status(ResponseModel.SUCCESS_STATUS)
+            .data(productModels)
+            .build();
     }
 }
