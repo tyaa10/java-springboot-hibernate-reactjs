@@ -49,7 +49,6 @@
                     if (xhr.status == 200) {
                         $.get("api/auth/user/check")
                             .done(function (resp) {
-                                console.log('resp 1 = ', resp)
                                 let modalInstance
                                 if (resp) {
                                     if (resp.status === 'success') {
@@ -69,14 +68,18 @@
                                         modalInstance.open()
                                     }
                                 }
+                            }).fail(function (xhr, status, error) {
+                                /* template = Hogan.compile(
+                                    '<span>Error: ' + error + '</span>'
+                                ) */
+                                alert("Error: " + error)
                             }).always(function (resp) {
-                                console.log(resp)
                                 if (resp && resp.status && resp.status == 401) {
                                     alert("Error: wrong username or password");
                                 } else if (resp && resp.status && resp.status === "success") {
                                     // alert("Signed In");
                                 } else {
-                                    alert("Unknown error");
+                                    // alert("Unknown error");
                                 }
                             })
                     } else {
@@ -84,14 +87,15 @@
                         $modal.find('.modal-content').html("Error: " + resp.message)
                         modalInstance.open()
                     }
+                }).fail(function (xhr, status, error) {
+                    /* template = Hogan.compile(
+                        '<span>Error: ' + error + '</span>'
+                    ) */
                 }).always(function (resp) {
-                    console.log(resp)
                     if (resp && resp.status && resp.status == 401) {
                         alert("Error: wrong username or password");
-                    } else if (resp && resp.status && resp.status === "success") {
-                        // alert("Signed In");
-                    } else {
-                        alert("Unknown error");
+                    } else if (resp && resp.status === "fail") {
+                        alert(resp.message);
                     }
                 })
             })

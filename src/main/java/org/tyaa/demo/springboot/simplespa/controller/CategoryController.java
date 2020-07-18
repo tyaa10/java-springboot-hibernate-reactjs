@@ -25,4 +25,11 @@ public class CategoryController {
     public ResponseEntity<ResponseModel> create(@RequestBody CategoryModel category) {
         return new ResponseEntity<>(service.create(category), HttpStatus.CREATED);
     }
+
+    @DeleteMapping(value = "/category/{id}")
+    public ResponseEntity<ResponseModel> deleteCategory(@PathVariable Long id) {
+        ResponseModel responseModel = service.delete(id);
+        System.out.println(responseModel);
+        return new ResponseEntity<>(responseModel, HttpStatus.OK);
+    }
 }

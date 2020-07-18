@@ -7,6 +7,7 @@ import org.tyaa.demo.springboot.simplespa.dao.CategoryHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.dao.ProductHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.entity.Product;
+import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
 import org.tyaa.demo.springboot.simplespa.model.ProductFilterModel;
 import org.tyaa.demo.springboot.simplespa.model.ProductModel;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
@@ -32,7 +33,7 @@ public class ProductService {
         if(categoryOptional.isPresent()){
             Product product =
                 Product.builder()
-                    .name(productModel.getName())
+                    .name(productModel.getTitle())
                     .description(productModel.getDescription())
                     .price(productModel.getPrice())
                     .quantity(productModel.getQuantity())
@@ -53,10 +54,24 @@ public class ProductService {
     }
 
     public ResponseModel getAll() {
-        List<Product> categories = productDao.findAll();
+        List<Product> products = productDao.findAll(Sort.by("id").descending());
+        List<ProductModel> productModels =
+            products.stream()
+                .map(p ->
+                    ProductModel.builder()
+                        .id(p.getId())
+                        .title(p.getName())
+                        .description(p.getDescription())
+                        .price(p.getPrice())
+                        .quantity(p.getQuantity())
+                        .image(p.getImage())
+                        .categoryId(p.getCategory().getId())
+                        .build()
+                )
+                .collect(Collectors.toList());
         return ResponseModel.builder()
                 .status(ResponseModel.SUCCESS_STATUS)
-                .data(categories)
+                .data(productModels)
                 .build();
     }
 
@@ -87,7 +102,7 @@ public class ProductService {
             products.stream()
             .map((p)->
                 ProductModel.builder()
-                    .name(p.getName())
+                    .title(p.getName())
                     .description(p.getDescription())
                     .price(p.getPrice())
                     .quantity(p.getQuantity())

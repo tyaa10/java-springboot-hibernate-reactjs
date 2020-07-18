@@ -13,7 +13,7 @@ import java.math.BigDecimal;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ProductModel {
     private Long id;
-    private String name;
+    private String title;
     private String description;
     private BigDecimal price;
     private Integer quantity;

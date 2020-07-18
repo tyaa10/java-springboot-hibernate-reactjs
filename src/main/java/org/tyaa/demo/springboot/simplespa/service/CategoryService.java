@@ -1,6 +1,7 @@
 package org.tyaa.demo.springboot.simplespa.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.tyaa.demo.springboot.simplespa.dao.CategoryHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
@@ -30,7 +31,7 @@ public class CategoryService {
     }
 
     public ResponseModel getAll() {
-        List<Category> categories = dao.findAll();
+        List<Category> categories = dao.findAll(Sort.by("id").descending());
         List<CategoryModel> categoryModels =
             categories.stream()
             .map(c ->
