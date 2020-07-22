@@ -12,16 +12,22 @@ import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 import org.tyaa.demo.springboot.simplespa.service.CategoryService;
+import org.tyaa.demo.springboot.simplespa.service.interfaces.ICategoryService;
+
+import java.util.Arrays;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.atLeast;
-import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
 
     @Mock
     private CategoryHibernateDAO categoryDAO;
+
+    @Mock
+    private ICategoryService categoryServiceMock;
 
     @InjectMocks
     private CategoryService categoryService;
@@ -56,6 +62,26 @@ public class CategoryServiceTest {
         assertEquals(ResponseModel.SUCCESS_STATUS, responseModel.getStatus());
         verify(categoryDAO, atLeast(1))
                 .save(categoryArgument.capture());
+    }
+
+    @Test
+    void shouldReturnGetAll() {
+        doReturn(
+            ResponseModel.builder()
+                .status(ResponseModel.SUCCESS_STATUS)
+                .data(Arrays.asList(new CategoryModel[] {
+                    new CategoryModel(1L, "c1"),
+                    new CategoryModel(1L, "c2"),
+                    new CategoryModel(1L, "c3")
+                }))
+                .build()
+        ).when(categoryServiceMock)
+        .getAll();
+        ResponseModel responseModel =
+            categoryServiceMock.getAll();
+        assertNotNull(responseModel);
+        assertNotNull(responseModel.getData());
+        assertTrue(((List)responseModel.getData()).size() == 3);
     }
 
     @AfterEach
