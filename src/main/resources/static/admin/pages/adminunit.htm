@@ -11,7 +11,7 @@
                         <form class="col s12">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="name" name="name" type="text" class="validate">
+                                    <input id="name" name="name" type="text" class="validate" required>
                                     <label for="name">category name</label>
                                 </div>
                             </div>
@@ -210,6 +210,9 @@
                     $('#categories-edit button[type=submit]').click(
                         function (ev) {
                             ev.preventDefault();
+                            if (!$('#categories-edit form')[0].checkValidity()){
+                                return false;
+                            }
                             $.ajax({
                                 url: "api/category"
                                 , data: JSON.stringify({

@@ -4,7 +4,7 @@
     let currentPage
     // show the "page" with optional parameter
     function show (pageName, param) {
-        //preloaderShow();
+        preloaderShow();
         // invoke page handler
         const ph = pageHandlers[pageName]
         if (ph) {
