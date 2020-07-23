@@ -10,12 +10,12 @@ import java.io.PrintStream;
 public class SystemOutResource implements BeforeEachCallback, AfterEachCallback {
 
     private PrintStream sysOut;
-    private final ByteArrayOutputStream outContent =
+    public static ByteArrayOutputStream outContent =
             new ByteArrayOutputStream();
 
     @Override
     public void beforeEach(ExtensionContext extensionContext) throws Exception {
-        System.out.println("beforeEach");
+        System.out.println("Before checkSuccessLogging");
         sysOut = System.out;
         System.setOut(new PrintStream(outContent));
     }
@@ -23,7 +23,7 @@ public class SystemOutResource implements BeforeEachCallback, AfterEachCallback 
     @Override
     public void afterEach(ExtensionContext extensionContext) throws Exception {
         System.setOut(sysOut);
-        System.out.println("afterEach");
+        System.out.println("After checkSuccessLogging");
     }
 
     public String asString() {

@@ -43,7 +43,7 @@ public class CategoryServiceTest {
 
     @BeforeEach
     void init() {
-        System.out.println("Test Case Started");
+        // System.out.println("Test Case Started");
     }
 
     @Test
@@ -87,7 +87,7 @@ public class CategoryServiceTest {
 
     @AfterEach
     void tearDown() {
-        System.out.println("Test Case Finished");
+        // System.out.println("Test Case Finished");
     }
 
     @Test
@@ -112,16 +112,17 @@ public class CategoryServiceTest {
     }
 
     @Test
-    @ExtendWith({SystemOutResource.class, SystemOutResourceParameterResolver.class})
-    void checkSuccessLogging(SystemOutResource sysOut) {
+    // @ExtendWith({SystemOutResource.class, SystemOutResourceParameterResolver.class})
+    @ExtendWith(SystemOutResource.class)
+    void checkSuccessLogging(/* SystemOutResource sysOut */) {
         final CategoryModel categoryModel =
             CategoryModel.builder()
                 .name("test category 1")
                 .build();
-        // categoryService.create(categoryModel);
+        categoryService.create(categoryModel);
         assertEquals(
             String.format("Category %s Created", categoryModel.getName().trim()),
-            sysOut.asString().trim()
+                SystemOutResource.outContent.toString().trim()
         );
     }
 
