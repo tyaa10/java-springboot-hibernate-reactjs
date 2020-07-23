@@ -1,6 +1,7 @@
 package org.tyaa.demo.springboot.simplespa.junit.service;
 
 
+import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -18,6 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
@@ -87,6 +89,27 @@ public class CategoryServiceTest {
     @AfterEach
     void tearDown() {
         System.out.println("Test Case Finished");
+    }
+
+    @Test
+    void shouldThrowConstraintException() {
+        final String tooLongCategoryName =
+            "test category 1234567890 1234567890 1234567890";
+        final Category tooLongNameCategory =
+            Category.builder().name(tooLongCategoryName).build();
+        given(categoryDAO.save(tooLongNameCategory))
+            .willThrow(new IllegalArgumentException());
+        try {
+            final CategoryModel categoryModel =
+                CategoryModel.builder()
+                    .name("test category 1234567890 1234567890 1234567890")
+                    .build();
+            categoryService.create(categoryModel);
+            fail("Should throw an IllegalArgumentException");
+        } catch (IllegalArgumentException ex) { }
+        then(categoryDAO)
+            .should(atLeastOnce())
+            .save(categoryArgument.capture());
     }
 
     @AfterAll
