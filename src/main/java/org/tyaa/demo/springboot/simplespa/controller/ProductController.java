@@ -5,6 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
 import org.tyaa.demo.springboot.simplespa.model.ProductFilterModel;
 import org.tyaa.demo.springboot.simplespa.model.ProductModel;
 import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
@@ -27,6 +28,12 @@ public class ProductController {
     @PostMapping("/product")
     public ResponseEntity<ResponseModel> create(@RequestBody ProductModel product) {
         return new ResponseEntity<>(service.create(product), HttpStatus.CREATED);
+    }
+
+    @PatchMapping(value = "/product/{id}")
+    public ResponseEntity<ResponseModel> update(@PathVariable Long id, @RequestBody ProductModel product) {
+        product.setId(id);
+        return new ResponseEntity<>(service.update(product), HttpStatus.OK);
     }
 
     @GetMapping("/categories/{categoryIds}/products::orderBy:{orderBy}::sortingDirection:{sortingDirection}")

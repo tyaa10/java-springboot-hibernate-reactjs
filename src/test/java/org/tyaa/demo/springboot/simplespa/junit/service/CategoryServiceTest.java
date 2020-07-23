@@ -20,7 +20,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.BDDMockito.*;
-import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 public class CategoryServiceTest {
@@ -110,6 +109,20 @@ public class CategoryServiceTest {
         then(categoryDAO)
             .should(atLeastOnce())
             .save(categoryArgument.capture());
+    }
+
+    @Test
+    @ExtendWith({SystemOutResource.class, SystemOutResourceParameterResolver.class})
+    void checkSuccessLogging(SystemOutResource sysOut) {
+        final CategoryModel categoryModel =
+            CategoryModel.builder()
+                .name("test category 1")
+                .build();
+        // categoryService.create(categoryModel);
+        assertEquals(
+            String.format("Category %s Created", categoryModel.getName().trim()),
+            sysOut.asString().trim()
+        );
     }
 
     @AfterAll

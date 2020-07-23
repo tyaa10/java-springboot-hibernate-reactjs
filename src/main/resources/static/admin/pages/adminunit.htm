@@ -40,8 +40,14 @@
                         <div class="card-stacked">
                             <div class="card-content">
                                 <form>
-                                    <button id="editCategory" class="waves-effect waves-light btn" type="button">Edit</button>
-                                    <button id="deleteCategory" class="waves-effect waves-light btn" type="button">Delete</button>
+                                    <button id="editCategory" class="waves-effect waves-light btn" type="button">
+                                        Edit
+                                        <i class="material-icons right">edit</i>
+                                    </button>
+                                    <button id="deleteCategory" class="waves-effect waves-light btn" type="button">
+                                        Delete
+                                        <i class="material-icons right">delete</i>
+                                    </button>
                                 </form>
                             </div>
                         </div>
@@ -62,7 +68,7 @@
                         <form class="col s12">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="title" name="title" type="text" class="validate">
+                                    <input id="title" name="title" type="text" class="validate" required>
                                     <label for="title">title</label>
                                 </div>
                                 <div id="category-select" class="input-field col s12">
@@ -72,14 +78,14 @@
                                 </div>
                                 <div class="input-field col s12">
                                     <label for="description">description</label>
-                                    <textarea name="description" id="description" class="materialize-textarea"></textarea>
+                                    <textarea name="description" id="description" class="materialize-textarea" required></textarea>
                                 </div>
                                 <div class="input-field col s12">
-                                    <input id="price" name="price" type="text" class="validate">
+                                    <input id="price" name="price" type="text" class="validate" required>
                                     <label for="price">price</label>
                                 </div>
                                 <div class="input-field col s12">
-                                    <input id="quantity" name="quantity" type="text" class="validate">
+                                    <input id="quantity" name="quantity" type="text" class="validate" required>
                                     <label for="quantity">quantity</label>
                                 </div>
                                 <div class="col s12">
@@ -143,6 +149,9 @@
                 case "categories": {
                     $('#categories-edit').css('display', 'block');
                     $('#products-edit').css('display', 'none');
+                    //
+                    const categories = []
+                    let selectedCategory = null
                     // Заполнение таблицы категорий
                     let populateCategoriesTable = function () {
                         let template
@@ -174,7 +183,12 @@
                                         </tbody>
                                     </table>`
                                 );
-                                //Заполняем шаблон данными и помещаем на веб-страницу
+                                //
+                                categories.length = 0
+                                resp.data.forEach(category => {
+                                    categories.push(category)
+                                })
+                                // Заполняем шаблон данными и помещаем на веб-страницу
                                 $('#categories-container').html(template.render(resp));
                                 $("#editCategory, #deleteCategory").attr('disabled', '');
                                 //Устанавливаем обработчик кликов на все строки таблицы кроме заголовка
@@ -206,6 +220,7 @@
                         })
                     }
                     populateCategoriesTable();
+                    // Обработчик клика по кнопке добавления новой категории
                     $('#categories-edit button[type=submit]').unbind("click");
                     $('#categories-edit button[type=submit]').click(
                         function (ev) {
@@ -213,34 +228,68 @@
                             if (!$('#categories-edit form')[0].checkValidity()){
                                 return false;
                             }
-                            $.ajax({
-                                url: "api/category"
-                                , data: JSON.stringify({
-                                    'name' : $('#categories-edit input#name').val()
-                                })
-                                , type: 'POST'
-                                , dataType : "json"
-                                , contentType : "application/json"
-                            }).done(function (resp) {
-                                let template
-                                if (resp && resp.status === 'success') {
-                                    populateCategoriesTable();
-                                } else {
+                            //
+                            if (selectedCategory === null) {
+                                $.ajax({
+                                    url: "api/category"
+                                    , data: JSON.stringify({
+                                        'name' : $('#categories-edit input#name').val()
+                                    })
+                                    , type: 'POST'
+                                    , dataType : "json"
+                                    , contentType : "application/json"
+                                }).done(function (resp) {
+                                    let template
+                                    if (resp && resp.status === 'success') {
+                                        populateCategoriesTable();
+                                    } else {
+                                        template = Hogan.compile(
+                                            '<span>Error. Status: {{status}}</span>'
+                                        );
+                                        let errorText = template.render(resp);
+                                    }
+                                }).fail(function (xhr, status, error) {
                                     template = Hogan.compile(
-                                        '<span>Error. Status: {{status}}</span>'
+                                        '<span>Error. Status: ' + error + '</span>'
                                     );
-                                    let errorText = template.render(resp);
-                                }
-                            }).fail(function (xhr, status, error) {
-                                template = Hogan.compile(
-                                    '<span>Error. Status: ' + error + '</span>'
-                                );
-                                let errorText = template.render({});
-                            }).always(function (resp) {
-                                if (resp && resp.status === "fail") {
-                                    alert("Error: " + resp.message)
-                                }
-                            })
+                                    let errorText = template.render({});
+                                }).always(function (resp) {
+                                    if (resp && resp.status === "fail") {
+                                        alert("Error: " + resp.message)
+                                    }
+                                })
+                            } else {
+                                $.ajax({
+                                    url: "api/category/" + selectedCategory.id
+                                    , data: JSON.stringify({
+                                        'name': $('#categories-edit input#name').val()
+                                    })
+                                    , type: 'PATCH'
+                                    , dataType : "json"
+                                    , contentType : "application/json"
+                                }).done(function (resp) {
+                                    let template
+                                    if (resp && resp.status === 'success') {
+                                        populateCategoriesTable();
+                                    } else {
+                                        template = Hogan.compile(
+                                            '<span>Error. Status: {{status}}</span>'
+                                        );
+                                        let errorText = template.render(resp);
+                                    }
+                                }).fail(function (xhr, status, error) {
+                                    template = Hogan.compile(
+                                        '<span>Error. Status: ' + error + '</span>'
+                                    );
+                                    let errorText = template.render({});
+                                }).always(function (resp) {
+                                    if (resp && resp.status === "fail") {
+                                        alert("Error: " + resp.message)
+                                    }
+                                    selectedCategory = null
+                                    $("#categories-edit form")[0].reset()
+                                })
+                            }
                         }
                     );
                     //
@@ -262,6 +311,16 @@
                             }
                         })
                     });
+                    //
+                    $("#editCategory").unbind("click");
+                    $('#editCategory').click(function (ev) {
+                        ev.preventDefault();
+                        const selectedCategoryId =
+                            $('#categories-edit .selectedTableRow').find('th').text();
+                        selectedCategory =
+                            categories.filter(category => category.id == selectedCategoryId)[0];
+                        $('#categories-edit input#name').val(selectedCategory.name);
+                    });
                     break;
                 }
                 //Логика администрирования наименований товаров
@@ -269,6 +328,8 @@
                     $('#products-edit').css('display', 'block');
                     $('#categories-edit').css('display', 'none');
                     //Get n render products table
+                    const products = []
+                    let selectedProduct = null
                     let populateProductsTable = function () {
                         $.ajax({
                             url: "api/products"
@@ -290,7 +351,7 @@
                                             {{#data}}
                                                 <tr>
                                                     <th scope="row">{{id}}</th>
-                                                    <td>{{name}}</td>
+                                                    <td>{{title}}</td>
                                                     <td>{{category.name}}</td>
                                                     <td>{{price}}</td>
                                                     <td>{{quantity}}</td>
@@ -302,6 +363,10 @@
                                         </tbody>
                                     </table>`
                                 );
+                                products.length = 0
+                                resp.data.forEach(product => {
+                                    products.push(product)
+                                })
                                 //Заполняем шаблон данными и помещаем на веб-страницу
                                 $('#products-container').html(template.render(resp));
                                 $("#editProduct, #deleteProduct").attr('disabled', '');
@@ -401,6 +466,10 @@
                     $('#products-edit button[type=submit]').click(
                         function (ev) {
                             ev.preventDefault();
+                            if (!$('#products-edit form')[0].checkValidity()
+                                || $('#products-edit form #category-select li.selected:not(.disabled)').length === 0) {
+                                return false;
+                            }
                             let selectedCategoryIndex =
                                 $('#products-edit form #category-select li.selected').index();
                             let selectedCategoryId =
@@ -415,30 +484,57 @@
                                 , 'categoryId' : selectedCategoryId
                                 , 'image' : imageBase64
                             };
-                            //
-                            $.ajax({
-                                url: "api/product"
-                                , data: JSON.stringify(formData)
-                                , type: 'POST'
-                                , dataType : "json"
-                                , contentType : "application/json"
-                            }).done(function (resp) {
-                                if (resp !== undefined && resp.status === 'success') {
-                                    //
-                                    populateProductsTable();
-                                } else {
-                                    template = Hogan.compile(
-                                        '<span>Error. Status: {{status}}</span>'
-                                    );
-                                    let errorText = template.render(resp);
-                                }
-                            }).fail(function (jqXHR, textStatus, errorThrown) {
-                                alert("Error: " + jqXHR);
-                            }).always(function (resp) {
-                                if (resp && resp.status === "fail") {
-                                    alert("Error: " + resp.message)
-                                }
-                            })
+                            if (selectedProduct === null) {
+                                $.ajax({
+                                    url: "api/product"
+                                    , data: JSON.stringify(formData)
+                                    , type: 'POST'
+                                    , dataType : "json"
+                                    , contentType : "application/json"
+                                }).done(function (resp) {
+                                    if (resp !== undefined && resp.status === 'success') {
+                                        //
+                                        populateProductsTable();
+                                    } else {
+                                        template = Hogan.compile(
+                                            '<span>Error. Status: {{status}}</span>'
+                                        );
+                                        let errorText = template.render(resp);
+                                    }
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    alert("Error: " + jqXHR);
+                                }).always(function (resp) {
+                                    if (resp && resp.status === "fail") {
+                                        alert("Error: " + resp.message)
+                                    }
+                                })
+                            } else {
+                                $.ajax({
+                                    url: "api/product/" + selectedProduct.id
+                                    , data: JSON.stringify(formData)
+                                    , type: 'PATCH'
+                                    , dataType : "json"
+                                    , contentType : "application/json"
+                                }).done(function (resp) {
+                                    if (resp && resp.status === 'success') {
+                                        //
+                                        populateProductsTable();
+                                    } else {
+                                        template = Hogan.compile(
+                                            '<span>Error. Status: {{status}}</span>'
+                                        );
+                                        let errorText = template.render(resp);
+                                    }
+                                }).fail(function (jqXHR, textStatus, errorThrown) {
+                                    alert("Error: " + jqXHR);
+                                }).always(function (resp) {
+                                    if (resp && resp.status === "fail") {
+                                        alert("Error: " + resp.message)
+                                    }
+                                    selectedProduct = null
+                                    $("#products-edit form")[0].reset()
+                                })
+                            }
                         }
                     );
                     $('#deleteProduct').unbind("click");
@@ -466,6 +562,21 @@
                                 alert("Error: " + resp.message)
                             }
                         })
+                    });
+                    $("#editProduct").unbind("click");
+                    $('#editProduct').click(function (ev) {
+                        ev.preventDefault();
+                        const selectedProductId =
+                            $('#products-edit .selectedTableRow').find('th').text();
+                        console.log('selectedProductId', selectedProductId)
+                        selectedProduct =
+                            products.filter(product => product.id == selectedProductId)[0];
+                        console.log('products', products)
+                        console.log('selectedProduct', selectedProduct)
+                        $('#products-edit input#title').val(selectedProduct.title);
+                        $('#products-edit textarea#description').val(selectedProduct.description);
+                        $('#products-edit input#quantity').val(selectedProduct.quantity);
+                        $('#products-edit input#price').val(selectedProduct.price);
                     });
                     break;
                 }
