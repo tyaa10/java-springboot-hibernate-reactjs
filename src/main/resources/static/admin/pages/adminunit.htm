@@ -11,7 +11,7 @@
                         <form class="col s12">
                             <div class="row">
                                 <div class="input-field col s12">
-                                    <input id="name" name="name" type="text" class="validate" required>
+                                    <input id="name" name="name" type="text" class="validate" required pattern="^[A-zА-я0-9\s]{1,25}$">
                                     <label for="name">category name</label>
                                 </div>
                             </div>
@@ -183,6 +183,9 @@
                                         </tbody>
                                     </table>`
                                 );
+                                const respString =
+                                    decodeURIComponent(JSON.stringify(resp).replace(/(%2E)/ig, "%20"));
+                                resp = JSON.parse(respString);
                                 //
                                 categories.length = 0
                                 resp.data.forEach(category => {
@@ -233,7 +236,7 @@
                                 $.ajax({
                                     url: "api/category"
                                     , data: JSON.stringify({
-                                        'name' : $('#categories-edit input#name').val()
+                                        'name' : encodeURIComponent($('#categories-edit input#name').val())
                                     })
                                     , type: 'POST'
                                     , dataType : "json"
