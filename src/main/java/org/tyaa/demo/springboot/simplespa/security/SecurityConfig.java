@@ -32,6 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
+            .cors().disable()
             .exceptionHandling()
             .authenticationEntryPoint(restAuthenticationEntryPoint)
             .and()
@@ -42,8 +43,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/auth/roles").permitAll()
             .antMatchers(HttpMethod.GET, "/api/auth/role/**").permitAll()
             .antMatchers("/shared/**").permitAll()
-            .antMatchers("/admin/**").hasRole("admin")
-            .antMatchers("/api/**/admin/**").hasRole("admin")
+            .antMatchers("/admin/**").hasRole("ADMIN")
+            .antMatchers("/api/**/admin/**").hasRole("ADMIN")
             .and()
             .formLogin()
             .successHandler(savedReqAwareAuthSuccessHandler)

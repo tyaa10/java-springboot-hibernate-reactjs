@@ -77,7 +77,6 @@ public class HibernateWebAuthProvider implements AuthenticationProvider, UserDet
     @Override
     @Transactional
     public Authentication authenticate(Authentication a) throws AuthenticationException {
-
         String name = a.getName();
         String password = a.getCredentials().toString();
         User user = null;
@@ -87,19 +86,12 @@ public class HibernateWebAuthProvider implements AuthenticationProvider, UserDet
             Logger.getLogger(HibernateWebAuthProvider.class.getName()).log(Level.SEVERE, null, ex);
         }
 
-        if (user != null) {
-            System.out.println(user.getPassword());
-            System.out.println(passwordEncoder.matches(password, user.getPassword()));
-        }
-
         if (user != null
                 && user.getRole() != null
-                && passwordEncoder.matches(password, user.getPassword())
+                && (passwordEncoder.matches(password, user.getPassword()))
         ) {
-            System.out.println(user.getPassword());
-            System.out.println(password);
             List<GrantedAuthority> authorities = new ArrayList<>();
-            authorities.add(new SimpleGrantedAuthority("ROLE_" + user.getRole().getName()));
+            authorities.add(new SimpleGrantedAuthority(/* "ROLE_" + */user.getRole().getName()));
             return new UsernamePasswordAuthenticationToken(name, password, authorities);
         } else {
             return null;

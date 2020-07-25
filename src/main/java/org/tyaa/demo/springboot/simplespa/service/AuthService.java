@@ -42,8 +42,8 @@ public class AuthService {
     public ResponseModel createUser(UserModel userModel) {
         User user =
             User.builder()
-                .name(userModel.getName())
-                .password(passwordEncoder.encode(userModel.getPassword()))
+                .name(userModel.getName().trim())
+                .password(passwordEncoder.encode(userModel.getPassword().trim()))
                 .role(roleDao.findRoleByName("user"))
                 .build();
         userDao.save(user);

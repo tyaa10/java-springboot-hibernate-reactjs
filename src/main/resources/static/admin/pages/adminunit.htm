@@ -265,7 +265,7 @@
                                 $.ajax({
                                     url: "api/category/" + selectedCategory.id
                                     , data: JSON.stringify({
-                                        'name': $('#categories-edit input#name').val()
+                                        'name': encodeURIComponent($('#categories-edit input#name').val())
                                     })
                                     , type: 'PATCH'
                                     , dataType : "json"

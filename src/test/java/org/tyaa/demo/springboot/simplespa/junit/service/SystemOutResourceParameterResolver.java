@@ -5,6 +5,8 @@ import org.junit.jupiter.api.extension.ParameterContext;
 import org.junit.jupiter.api.extension.ParameterResolutionException;
 import org.junit.jupiter.api.extension.ParameterResolver;
 
+/* Разрешитель для вндрения ссылки на объект типа SystemOutResource
+внутрь класса тестов или внутрь отельных тест-кейсов*/
 public class SystemOutResourceParameterResolver implements ParameterResolver {
 
     @Override

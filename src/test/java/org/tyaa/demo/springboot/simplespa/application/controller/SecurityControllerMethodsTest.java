@@ -15,21 +15,32 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 public class SecurityControllerMethodsTest {
 
+    // Обычное внедрение зависимости,
+    // потому что в тестах приложения доступен функционал Спринг
     @Autowired
     public AuthController authController;
 
     @Test
     public void shouldThrowAuthenticationCredentialsNotFoundException() {
+        // проверить, что вызов метода getAllRoles из объекта контроллера
+        // выбросит исключение, потому что выполняется
+        // неаутентифицированным пользователем
         assertThrows(AuthenticationCredentialsNotFoundException.class, () -> {
             authController.getAllRoles();
         });
     }
+
+    // проверка возможности получения стандартной модели данных о пользователе
+    // по его имени из пользовательского бина hibernateWebAuthProvider,
+    // из стандартного метода loadUserByUsername
     @Test
     @WithUserDetails(
         value = "admin",
         userDetailsServiceBeanName = "hibernateWebAuthProvider")
     public void withUserDetailsTest() {}
 
+    // успешный вызов защищенного метода пользователем
+    // с именем и ролью Админ
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
     public void getAllRolesByAdminUserTest() {
@@ -38,6 +49,8 @@ public class SecurityControllerMethodsTest {
         assertEquals(responseEntity.getStatusCode(), HttpStatus.OK);
     }
 
+    // успешный вызов защищенного метода пользователем
+    // только с явно указанной ролью Админ
     @Test
     @WithMockUser(roles = { "ADMIN" })
     public void getAllRolesByAdminRoleTest() {

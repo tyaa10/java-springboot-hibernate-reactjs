@@ -36,10 +36,10 @@ public class SpringbootSimplespaApplication {
 			ProductHibernateDAO productDAO
 	) {
 		return args -> {
-			roleDAO.save(Role.builder().name("admin").build());
-			roleDAO.save(Role.builder().name("user").build());
-			Role adminRole = roleDAO.findRoleByName("admin");
-			Role userRole = roleDAO.findRoleByName("user");
+			roleDAO.save(Role.builder().name("ROLE_ADMIN").build());
+			roleDAO.save(Role.builder().name("ROLE_USER").build());
+			Role adminRole = roleDAO.findRoleByName("ROLE_ADMIN");
+			Role userRole = roleDAO.findRoleByName("ROLE_USER");
 			userDAO.save(
 				User.builder()
 					.name("admin")
