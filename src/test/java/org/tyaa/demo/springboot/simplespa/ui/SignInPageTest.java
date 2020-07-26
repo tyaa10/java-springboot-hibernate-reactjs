@@ -9,6 +9,8 @@ import org.tyaa.demo.springboot.simplespa.SpringbootSimplespaApplication;
 import org.tyaa.demo.springboot.simplespa.ui.pagefactory.HomePage;
 import org.tyaa.demo.springboot.simplespa.ui.pagefactory.SignInPage;
 
+import static org.junit.jupiter.api.Assertions.*;
+
 @ExtendWith(SpringExtension.class)
 @SpringBootTest(
         webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
@@ -28,7 +30,17 @@ public class SignInPageTest extends AbstractPageTest {
     }
 
     @Test
-    public void main() throws InterruptedException {
-        Thread.sleep(5000);
+    public void performSignInWithCorrectAdminUserNameAndPassword() {
+        signInPage.loginWithValidCredentials("admin", "AdminPassword1");
+        assertEquals("http://localhost:8090/simplespa/#!home", driver.getCurrentUrl());
+    }
+
+    @Test
+    public void failSignInWithWrongUserNameAndCorrectAdminPassword() {
+        signInPage =
+            signInPage.loginWithInvalidCredentials("wrong", "AdminPassword1");
+        String errorText = signInPage.getErrorText();
+        assertNotNull(errorText);
+        assertEquals("Error: wrong username or password", errorText);
     }
 }
