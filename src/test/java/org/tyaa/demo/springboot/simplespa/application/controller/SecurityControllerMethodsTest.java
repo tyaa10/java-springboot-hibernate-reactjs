@@ -15,6 +15,17 @@ import org.tyaa.demo.springboot.simplespa.controller.AuthController;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+/*
+ * Класс тестов приложения для проверки рест-контроллера безопасности
+ * прямыми вызовами его методов действий на серверной стороне
+ * с полноценным доступом только к слою контроллеров
+ * (другие составляющие приложения при необходимости нужно получать
+ * в виде макетов, например, используя внедрение макетов аннотациями MockBean)
+ * */
+
+// включение режима теста приложения без запуска на реальном веб-сервере,
+// без доступа к контексту приложения
+// и к реализациям составляющих приложения вне слоя контроллеров
 @SpringBootTest
 @TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SecurityControllerMethodsTest {
