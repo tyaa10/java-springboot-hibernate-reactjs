@@ -1,6 +1,7 @@
 package org.tyaa.demo.springboot.simplespa.ui;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,27 +19,30 @@ import static org.junit.jupiter.api.Assertions.*;
 )
 public class SignInPageTest extends AbstractPageTest {
 
-    private HomePage homePage;
-
     private SignInPage signInPage;
 
     @BeforeEach
     public void setupCase() {
-        driver.get("http://localhost:8090/simplespa/");
-        homePage = new HomePage(driver);
-        signInPage = homePage.clickSignIn();
+        signInPage = indexPage.clickSignIn();
     }
 
     @Test
+    @Order(1)
     public void performSignInWithCorrectAdminUserNameAndPassword() {
         signInPage.loginWithValidCredentials("admin", "AdminPassword1");
         assertEquals("http://localhost:8090/simplespa/#!home", driver.getCurrentUrl());
+        String logOutButtonText = indexPage.getLogOutButtonText();
+        assertNotNull(logOutButtonText);
+        assertEquals("Sign Out (admin)", logOutButtonText);
     }
 
     @Test
+    @Order(2)
     public void failSignInWithWrongUserNameAndCorrectAdminPassword() {
-        signInPage =
+        //signInPage =
             signInPage.loginWithInvalidCredentials("wrong", "AdminPassword1");
+        String logOutButtonText = indexPage.getLogOutButtonText();
+        assertEquals("", logOutButtonText);
         String errorText = signInPage.getErrorText();
         assertNotNull(errorText);
         assertEquals("Error: wrong username or password", errorText);

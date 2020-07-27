@@ -1,7 +1,6 @@
 package org.tyaa.demo.springboot.simplespa.application.controller;
 
-import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.TestInstance;
+import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.AutoConfigureTestDatabase;
@@ -41,6 +40,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 })
 @AutoConfigureTestDatabase(replace = NONE)
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SecurityControllerRequestsTest {
 
     @Autowired
@@ -52,12 +52,14 @@ public class SecurityControllerRequestsTest {
     final String baseUrl = "http://localhost:" + 8090 + "/simplespa/";
 
     @Test
+    @Order(1)
     public void performLoginDefault() throws Exception {
         mvc.perform(formLogin())
             .andExpect((redirectedUrl("/api/auth/user/onerror")));
     }
 
     @Test
+    @Order(2)
     public void performLoginWithAdminUserPassword() throws Exception {
         mvc.perform(formLogin("/login")
             .user("admin")
@@ -66,6 +68,7 @@ public class SecurityControllerRequestsTest {
     }
 
     @Test
+    @Order(3)
     public void performLoginWithParameterSet() throws Exception {
         mvc.perform(formLogin("/login")
             .user("username", "admin")
@@ -74,12 +77,14 @@ public class SecurityControllerRequestsTest {
     }
 
     @Test
+    @Order(4)
     public void performLogout() throws Exception {
         mvc.perform(get("/logout"))
             .andExpect((redirectedUrl("/api/auth/user/signedout")));
     }
 
     @Test
+    @Order(5)
     public void whenAdminRequestsAllRoles_ThenSuccess() throws Exception {
         ResponseEntity<String> response =
                 testRestTemplate.exchange(
@@ -92,6 +97,7 @@ public class SecurityControllerRequestsTest {
     }
 
     @Test
+    @Order(6)
     public void whenLoggedUserRequestsAllRoles_ThenForbidden() throws Exception {
         ResponseEntity<String> response =
                 testRestTemplate.exchange(
@@ -104,17 +110,15 @@ public class SecurityControllerRequestsTest {
     }
 
     @Test
-    public void whenLoggedUserRequestsDeleteUser_ThenSuccess() {
-        ResponseEntity<String> httpStatus =
-                testRestTemplate.exchange(
-                        baseUrl + "api/auth/user/2",
-                        HttpMethod.DELETE,
-                        new HttpEntity<>(loginUser()),
-                        String.class);
-        assertEquals(HttpStatus.NO_CONTENT, httpStatus.getStatusCode());
+    @Order(7)
+    public void whenAnyUserRequestsIndexPage_ThenSuccess() throws Exception {
+        ResponseEntity<String> response =
+                testRestTemplate.getForEntity(baseUrl, String.class);
+        assertEquals(HttpStatus.OK, response.getStatusCode());
     }
 
     @Test
+    @Order(8)
     public void whenAnonymousUserRequestsDeleteUser_ThenUnauthorized() {
         ResponseEntity<String> httpStatus =
                 testRestTemplate.exchange(
@@ -126,10 +130,15 @@ public class SecurityControllerRequestsTest {
     }
 
     @Test
-    public void whenAnyUserRequestsIndexPage_ThenSuccess() throws Exception {
-        ResponseEntity<String> response =
-                testRestTemplate.getForEntity(baseUrl, String.class);
-        assertEquals(HttpStatus.OK, response.getStatusCode());
+    @Order(9)
+    public void whenLoggedUserRequestsDeleteUser_ThenSuccess() {
+        ResponseEntity<String> httpStatus =
+                testRestTemplate.exchange(
+                        baseUrl + "api/auth/user/2",
+                        HttpMethod.DELETE,
+                        new HttpEntity<>(loginUser()),
+                        String.class);
+        assertEquals(HttpStatus.NO_CONTENT, httpStatus.getStatusCode());
     }
 
     private HttpHeaders login(String username, String password) {
@@ -151,7 +160,7 @@ public class SecurityControllerRequestsTest {
     }
 
     private HttpHeaders loginUser() {
-        return login("two", "UserPassword2");
+        return login("one", "UserPassword1");
     }
 
     private HttpHeaders anonymousUser() {

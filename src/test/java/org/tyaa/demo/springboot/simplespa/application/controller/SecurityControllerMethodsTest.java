@@ -1,6 +1,9 @@
 package org.tyaa.demo.springboot.simplespa.application.controller;
 
+import org.junit.jupiter.api.MethodOrderer;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.TestMethodOrder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
@@ -13,6 +16,7 @@ import org.tyaa.demo.springboot.simplespa.controller.AuthController;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 public class SecurityControllerMethodsTest {
 
     // Обычное внедрение зависимости,
@@ -21,6 +25,7 @@ public class SecurityControllerMethodsTest {
     public AuthController authController;
 
     @Test
+    @Order(1)
     public void shouldThrowAuthenticationCredentialsNotFoundException() {
         // проверить, что вызов метода getAllRoles из объекта контроллера
         // выбросит исключение, потому что выполняется
@@ -37,12 +42,14 @@ public class SecurityControllerMethodsTest {
     @WithUserDetails(
         value = "admin",
         userDetailsServiceBeanName = "hibernateWebAuthProvider")
+    @Order(2)
     public void withUserDetailsTest() {}
 
     // успешный вызов защищенного метода пользователем
     // с именем и ролью Админ
     @Test
     @WithMockUser(username = "admin", roles = { "ADMIN" })
+    @Order(3)
     public void getAllRolesByAdminUserTest() {
         ResponseEntity responseEntity = authController.getAllRoles();
         assertNotNull(responseEntity);
@@ -53,6 +60,7 @@ public class SecurityControllerMethodsTest {
     // только с явно указанной ролью Админ
     @Test
     @WithMockUser(roles = { "ADMIN" })
+    @Order(4)
     public void getAllRolesByAdminRoleTest() {
         ResponseEntity responseEntity = authController.getAllRoles();
         assertNotNull(responseEntity);

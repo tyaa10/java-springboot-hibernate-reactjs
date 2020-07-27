@@ -2,6 +2,7 @@ package org.tyaa.demo.springboot.simplespa.ui.pagefactory;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 
 public class SignInPage extends AbstractPage {
 
@@ -25,21 +26,23 @@ public class SignInPage extends AbstractPage {
         return this;
     }
 
-    public SignInPage loginWithInvalidCredentials(String userName, String password){
+    public SignInPage loginWithInvalidCredentials(String userName, String password) {
         this.typeUserName(userName);
         this.typePassword(password);
         driver.findElement(signInButton).click();
         return new SignInPage(driver);
     }
 
-    public HomePage loginWithValidCredentials(String userName, String password){
+    public HomePage loginWithValidCredentials(String userName, String password) {
         this.typeUserName(userName);
         this.typePassword(password);
         driver.findElement(signInButton).click();
         return new HomePage(driver);
     }
 
-    public String getErrorText(){
-        return driver.findElement(errorParagraph).getText();
+    public String getErrorText() {
+        WebElement errorParagraphElement =
+                driver.findElement(errorParagraph);
+        return errorParagraphElement != null ? errorParagraphElement.getText() : null;
     }
 }
