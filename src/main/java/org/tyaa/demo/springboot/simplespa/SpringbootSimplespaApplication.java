@@ -90,6 +90,14 @@ public class SpringbootSimplespaApplication {
 					.quantity(2000)
 					.category(stockCategory)
 					.build();
+			Product stockORCLProduct2 =
+				Product.builder()
+					.name("ORCL")
+					.description("Oracle Stock")
+					.price(new BigDecimal(56.12))
+					.quantity(1000)
+					.category(stockCategory)
+					.build();
 			Product cryptoEthereumProduct =
 				Product.builder()
 					.name("ETH")
@@ -100,6 +108,7 @@ public class SpringbootSimplespaApplication {
 					.build();
 			productDAO.save(stockMSFTProduct);
 			productDAO.save(stockORCLProduct);
+			productDAO.save(stockORCLProduct2);
 			productDAO.save(cryptoEthereumProduct);
 		};
 	}

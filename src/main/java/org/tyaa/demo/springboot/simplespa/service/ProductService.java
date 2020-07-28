@@ -1,10 +1,12 @@
 package org.tyaa.demo.springboot.simplespa.service;
 
+import com.querydsl.core.types.dsl.BooleanExpression;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.tyaa.demo.springboot.simplespa.dao.CategoryHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.dao.ProductHibernateDAO;
+import org.tyaa.demo.springboot.simplespa.dao.predicate.ProductPredicatesBuilder;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.entity.Product;
 import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
@@ -15,6 +17,8 @@ import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
 import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -131,19 +135,37 @@ public class ProductService {
                 filter.categories,
                 Sort.by(filter.sortingDirection, filter.orderBy)
             );
+        return getResponseModelFromEntities(products);
+    }
+
+    public ResponseModel search(String search) {
+        ProductPredicatesBuilder builder = new ProductPredicatesBuilder();
+        if (search != null && !search.isEmpty()) {
+            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+            Matcher matcher = pattern.matcher(search + ",");
+            while (matcher.find()) {
+                builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+            }
+        }
+        BooleanExpression expression = builder.build();
+        List<Product> products = (List<Product>) productDao.findAll(expression);
+        return getResponseModelFromEntities(products);
+    }
+
+    private ResponseModel getResponseModelFromEntities(List<Product> products) {
         List<ProductModel> productModels =
             products.stream()
-            .map((p)->
-                ProductModel.builder()
-                    .title(p.getName())
-                    .description(p.getDescription())
-                    .price(p.getPrice())
-                    .quantity(p.getQuantity())
-                    .categoryId(p.getCategory().getId())
-                    .build()
-            )
-            .collect(Collectors.toList());
-
+                .map((p)->
+                    ProductModel.builder()
+                        .id(p.getId())
+                        .title(p.getName())
+                        .description(p.getDescription())
+                        .price(p.getPrice())
+                        .quantity(p.getQuantity())
+                        .categoryId(p.getCategory().getId())
+                        .build()
+                )
+                .collect(Collectors.toList());
         return ResponseModel.builder()
             .status(ResponseModel.SUCCESS_STATUS)
             .data(productModels)

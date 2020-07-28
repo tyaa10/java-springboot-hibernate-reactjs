@@ -49,4 +49,12 @@ public class ProductController {
             HttpStatus.OK
         );
     }
+
+    @GetMapping("/products/filtered")
+    public ResponseEntity<ResponseModel> search(@RequestParam(value = "search") String searchString) {
+        return new ResponseEntity<>(
+            service.search(searchString),
+            HttpStatus.OK
+        );
+    }
 }
