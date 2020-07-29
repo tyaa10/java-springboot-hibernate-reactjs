@@ -5,10 +5,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
-import org.tyaa.demo.springboot.simplespa.model.ProductFilterModel;
-import org.tyaa.demo.springboot.simplespa.model.ProductModel;
-import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
+import org.tyaa.demo.springboot.simplespa.model.*;
 import org.tyaa.demo.springboot.simplespa.service.ProductService;
 
 import java.util.List;
@@ -50,10 +47,21 @@ public class ProductController {
         );
     }
 
-    @GetMapping("/products/filtered")
-    public ResponseEntity<ResponseModel> search(@RequestParam(value = "search") String searchString) {
+    // поиск списка товаров согласно query dsl-запроса из http-параметра search
+    // и сортировка по значению поля orderBy в направлении sortingDirection,
+    // заданным как часть начальной строки с произвольно выбранными разделителями:
+    // "::" - между парами ключ-значение,
+    // ":" - между каждым ключом и его значением
+    @GetMapping("/products/filtered::orderBy:{orderBy}::sortingDirection:{sortingDirection}")
+    public ResponseEntity<ResponseModel> search(
+        @RequestParam(value = "search") String searchString,
+        @PathVariable String orderBy,
+        @PathVariable Sort.Direction sortingDirection
+    ) {
         return new ResponseEntity<>(
-            service.search(searchString),
+            service.search(
+                new ProductSearchModel(searchString, orderBy, sortingDirection)
+            ),
             HttpStatus.OK
         );
     }

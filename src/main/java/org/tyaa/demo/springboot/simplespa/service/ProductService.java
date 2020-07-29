@@ -9,10 +9,7 @@ import org.tyaa.demo.springboot.simplespa.dao.ProductHibernateDAO;
 import org.tyaa.demo.springboot.simplespa.dao.predicate.ProductPredicatesBuilder;
 import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.entity.Product;
-import org.tyaa.demo.springboot.simplespa.model.CategoryModel;
-import org.tyaa.demo.springboot.simplespa.model.ProductFilterModel;
-import org.tyaa.demo.springboot.simplespa.model.ProductModel;
-import org.tyaa.demo.springboot.simplespa.model.ResponseModel;
+import org.tyaa.demo.springboot.simplespa.model.*;
 
 import javax.transaction.Transactional;
 import java.util.List;
@@ -138,17 +135,31 @@ public class ProductService {
         return getResponseModelFromEntities(products);
     }
 
-    public ResponseModel search(String search) {
+    // поиск отфильтрованного и отсортированного списка товаров
+    // на основе запросов query dsl
+    public ResponseModel search(ProductSearchModel searchModel) {
         ProductPredicatesBuilder builder = new ProductPredicatesBuilder();
-        if (search != null && !search.isEmpty()) {
-            Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
-            Matcher matcher = pattern.matcher(search + ",");
+        if (searchModel.searchString != null && !searchModel.searchString.isEmpty()) {
+            // разбиение значения http-параметра search
+            // на отдельные выражения условий фильтрации
+            Pattern pattern = Pattern.compile("([\\w]+?)(:|<|>)([\\w\\]\\[\\,]+?);");
+            Matcher matcher = pattern.matcher(searchModel.searchString + ";");
             while (matcher.find()) {
                 builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
             }
         }
         BooleanExpression expression = builder.build();
-        List<Product> products = (List<Product>) productDao.findAll(expression);
+        // выполнение sql-запроса к БД
+        // с набором условий фильтрации
+        // и с указанием имени поля и направления сортировки
+        List<Product> products =
+            (List<Product>) productDao.findAll(
+                expression,
+                Sort.by(
+                    searchModel.sortingDirection,
+                    searchModel.orderBy
+                )
+            );
         return getResponseModelFromEntities(products);
     }
 
