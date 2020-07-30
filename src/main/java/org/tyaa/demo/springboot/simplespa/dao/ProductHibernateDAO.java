@@ -11,7 +11,6 @@ import org.springframework.data.querydsl.binding.QuerydslBindings;
 import org.springframework.data.querydsl.binding.SingleValueBinding;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
-import org.tyaa.demo.springboot.simplespa.entity.Category;
 import org.tyaa.demo.springboot.simplespa.entity.Product;
 import org.tyaa.demo.springboot.simplespa.entity.QProduct;
 
@@ -27,6 +26,9 @@ public interface ProductHibernateDAO extends JpaRepository<Product, Long>,
         Sort sort
     );
 
+    // добавление поддержки запросов query dsl
+    // (предварительно нужно сгенерировать тип QProduct командой
+    // mvn apt:process)
     @Override
     default public void customize(
             QuerydslBindings bindings, QProduct root) {

@@ -1,4 +1,4 @@
-package org.tyaa.demo.springboot.simplespa.application.controller;
+package org.tyaa.demo.springboot.simplespa.test.application.controller;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

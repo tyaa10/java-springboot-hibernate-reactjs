@@ -1,4 +1,4 @@
-package org.tyaa.demo.springboot.simplespa.application.dao.predicate;
+package org.tyaa.demo.springboot.simplespa.test.application.dao.predicate;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

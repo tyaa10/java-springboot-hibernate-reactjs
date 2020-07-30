@@ -1,8 +1,10 @@
-package org.tyaa.demo.springboot.simplespa.ui.pagefactory;
+package org.tyaa.demo.springboot.simplespa.test.ui.pagefactory;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+
+import java.util.List;
 
 public class SignInPage extends AbstractPage {
 
@@ -41,8 +43,8 @@ public class SignInPage extends AbstractPage {
     }
 
     public String getErrorText() {
-        WebElement errorParagraphElement =
-                driver.findElement(errorParagraph);
-        return errorParagraphElement != null ? errorParagraphElement.getText() : null;
+        List<WebElement> errorParagraphElement =
+                driver.findElements(errorParagraph);
+        return !errorParagraphElement.isEmpty() ? errorParagraphElement.get(0).getText() : null;
     }
 }

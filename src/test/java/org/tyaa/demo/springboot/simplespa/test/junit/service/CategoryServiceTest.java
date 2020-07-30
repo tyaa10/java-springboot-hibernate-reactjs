@@ -1,7 +1,6 @@
-package org.tyaa.demo.springboot.simplespa.junit.service;
+package org.tyaa.demo.springboot.simplespa.test.junit.service;
 
 
-import org.hibernate.exception.ConstraintViolationException;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;

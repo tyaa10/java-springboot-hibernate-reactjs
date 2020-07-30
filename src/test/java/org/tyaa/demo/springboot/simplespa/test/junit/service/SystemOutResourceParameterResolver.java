@@ -1,4 +1,4 @@
-package org.tyaa.demo.springboot.simplespa.junit.service;
+package org.tyaa.demo.springboot.simplespa.test.junit.service;
 
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.api.extension.ParameterContext;

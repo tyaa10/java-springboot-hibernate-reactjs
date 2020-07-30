@@ -1,13 +1,11 @@
-package org.tyaa.demo.springboot.simplespa.ui;
+package org.tyaa.demo.springboot.simplespa.test.ui;
 
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.tyaa.demo.springboot.simplespa.ui.pagefactory.HomePage;
-import org.tyaa.demo.springboot.simplespa.ui.pagefactory.IndexPage;
+import org.tyaa.demo.springboot.simplespa.test.ui.pagefactory.IndexPage;
 
 import java.util.concurrent.TimeUnit;
 

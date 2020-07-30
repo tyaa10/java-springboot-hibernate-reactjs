@@ -1,4 +1,4 @@
-package org.tyaa.demo.springboot.simplespa.ui;
+package org.tyaa.demo.springboot.simplespa.test.ui;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Order;
@@ -7,8 +7,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.tyaa.demo.springboot.simplespa.SpringbootSimplespaApplication;
-import org.tyaa.demo.springboot.simplespa.ui.pagefactory.HomePage;
-import org.tyaa.demo.springboot.simplespa.ui.pagefactory.SignInPage;
+import org.tyaa.demo.springboot.simplespa.test.ui.pagefactory.SignInPage;
 
 import static org.junit.jupiter.api.Assertions.*;
 

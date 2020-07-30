@@ -1,4 +1,4 @@
-package org.tyaa.demo.springboot.simplespa.application.controller;
+package org.tyaa.demo.springboot.simplespa.test.application.controller;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 // включение режима теста приложения с запуском на реальном веб-сервере
 // и с доступом к контексту приложения
 @SpringBootTest(
-        webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT,
+        webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
         classes = SpringbootSimplespaApplication.class
 )
 // режим создания одиночного экземпляра класса тестов для всех кейсов
@@ -36,7 +36,7 @@ public class ProductControllerRequestsTest {
     @Autowired
     private TestRestTemplate testRestTemplate;
 
-    final String baseUrl = "http://localhost:" + 8090 + "/simplespa/api";
+    final String baseUrl = "/api";
 
     @Test
     @Order(1)

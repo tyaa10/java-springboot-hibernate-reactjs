@@ -1,6 +1,5 @@
-package org.tyaa.demo.springboot.simplespa.ui.pagefactory;
+package org.tyaa.demo.springboot.simplespa.test.ui.pagefactory;
 
-import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 
 public class HomePage extends AbstractPage {
