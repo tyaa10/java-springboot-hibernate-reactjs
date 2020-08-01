@@ -127,7 +127,7 @@
       "avoid-escape"
     ],
     "semicolon": [
-      false,
+      true,
       "always"
     ],
     "variable-name": [
