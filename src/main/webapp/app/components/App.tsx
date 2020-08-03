@@ -50,7 +50,7 @@ class App extends Component {
                             activeClassName="active"
                             exact
                         >
-                            <NavItem>{route.name}</NavItem>
+                            {route.name}
                         </NavLink>
                     ))}
                 </Navbar>
