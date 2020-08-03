@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import {Container, Icon, Navbar, NavItem, Toast} from 'react-materialize'
+import {Container, Icon, Navbar} from 'react-materialize'
 import 'materialize-css/dist/css/materialize.min.css'
 import 'materialize-css/dist/js/materialize.min'
 import './style.css'
@@ -13,6 +13,7 @@ import Home from "./pages/Home";
 import Shopping from "./pages/Shopping";
 import SignIn from "./pages/SignIn";
 import SignUp from "./pages/SignUp";
+import {inject, observer} from "mobx-react";
 
 const routes = [
     { path: '/', name: 'Home', Component: Home },
