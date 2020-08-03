@@ -1,4 +1,5 @@
 const path = require('path')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
 
 module.exports = {
     entry: './src/main/webapp/app/index.tsx',
@@ -28,5 +29,15 @@ module.exports = {
                 use: ['style-loader', 'css-loader']
             }
         ]
+    },
+    plugins: [
+        new HtmlWebpackPlugin({
+            template: './src/main/resources/static/index.html'
+        })
+    ],
+    devServer: {
+        contentBase: path.join(__dirname, 'src/main/resources/static/dev'),
+        compress: true,
+        port: 9000
     }
 }
