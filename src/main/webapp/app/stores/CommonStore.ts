@@ -3,13 +3,13 @@ import {action, observable} from "mobx"
 class CommonStore {
 
     @observable loading: Boolean = false
-    @observable error: String = "hello error"
+    @observable error: String = null
 
-    @action setLoading(loading) {
+    @action setLoading(loading: Boolean) {
         this.loading = loading
     }
 
-    @action setError(error) {
+    @action setError(error: String) {
         this.error = error
     }
 

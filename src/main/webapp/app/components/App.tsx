@@ -9,21 +9,13 @@ import {
     NavLink
 } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
-import Home from "./pages/Home";
-import Shopping from "./pages/Shopping";
-import SignIn from "./pages/SignIn";
-import SignUp from "./pages/SignUp";
 import {inject, observer} from "mobx-react";
 
-const routes = [
-    { path: '/', name: 'Home', Component: Home },
-    { path: '/shopping', name: 'Shopping', Component: Shopping },
-    { path: '/signin', name: 'SignIn', Component: SignIn },
-    { path: '/signup', name: 'SignUp', Component: SignUp },
-]
-
+@inject("routerStore")
+@observer
 class App extends Component {
     render () {
+        const { routes } = this.props.routerStore
         return <Router basename='/simplespa'>
             <div>
                 <Navbar
@@ -50,6 +42,7 @@ class App extends Component {
                             to={route.path}
                             activeClassName="active"
                             exact
+
                         >
                             {route.name}
                         </NavLink>
