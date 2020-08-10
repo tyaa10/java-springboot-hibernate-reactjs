@@ -34,3 +34,6 @@ build/
 node_modules/
 package-lock.json
 src/main/resources/static/built/
+
+### html-webpack-plugin ###
+index.html
