@@ -1,5 +1,5 @@
 export default class UserModel {
-    private name: String
+    public name: String
     constructor (name) {
         this.name = name
     }

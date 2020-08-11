@@ -1,11 +1,8 @@
 import React, { Component } from 'react'
-import { withRouter } from "react-router-dom"
 import {Button, Card, Col, Icon, Row, TextInput} from "react-materialize"
 import {inject, observer} from "mobx-react"
-import {reaction} from "mobx"
 
-@inject("commonStore", "userStore", "routerStore")
-@withRouter
+@inject("commonStore", "userStore")
 @observer
 class SignIn extends Component {
 
@@ -25,19 +22,6 @@ class SignIn extends Component {
         e.preventDefault()
         this.props.userStore.login()
     }
-
-    userReaction = reaction(
-        () => this.props.userStore.user,
-        (user) => {
-            if (user) {
-                this.props.history.replace("/")
-                this.props.routerStore.setLoggedRoutes()
-            } else {
-                this.props.history.replace("/signin")
-                this.props.routerStore.setAnonymousRoutes()
-            }
-        }
-    )
 
     render () {
         const { loading } = this.props.commonStore

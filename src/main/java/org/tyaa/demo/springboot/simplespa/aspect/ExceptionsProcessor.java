@@ -42,6 +42,7 @@ public class ExceptionsProcessor {
                     .message("This name is already taken")
                     .build();
         } catch (Exception ex) {
+            ex.printStackTrace();
             output =
                 ResponseModel.builder()
                     .status(ResponseModel.FAIL_STATUS)

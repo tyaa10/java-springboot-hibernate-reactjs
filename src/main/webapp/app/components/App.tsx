@@ -4,19 +4,35 @@ import 'materialize-css/dist/css/materialize.min.css'
 import 'materialize-css/dist/js/materialize.min'
 import './style.css'
 import {
-    BrowserRouter as Router,
+    Router,
     Route,
     NavLink
 } from 'react-router-dom'
 import { CSSTransition } from 'react-transition-group'
 import {inject, observer} from "mobx-react";
+import {reaction} from "mobx";
+import history from '../history'
 
-@inject("routerStore")
+@inject("routerStore", "userStore")
 @observer
 class App extends Component {
+
+    userReaction = reaction(
+        () => this.props.userStore.user,
+        (user) => {
+            if (user) {
+                history.replace("/")
+                this.props.routerStore.setLoggedRoutes()
+            } else {
+                history.replace("/signin")
+                this.props.routerStore.setAnonymousRoutes()
+            }
+        }
+    )
+
     render () {
         const { routes } = this.props.routerStore
-        return <Router basename='/simplespa'>
+        return <Router history={history} >
             <div>
                 <Navbar
                     alignLinks="right"
