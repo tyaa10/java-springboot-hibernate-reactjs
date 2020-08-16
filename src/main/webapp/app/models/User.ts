@@ -1,6 +1,8 @@
 export default class UserModel {
     public name: String
-    constructor (name) {
+    public roleName: String
+    constructor (name, roleName) {
         this.name = name
+        this.roleName = roleName
     }
 }

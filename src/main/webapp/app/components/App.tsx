@@ -22,7 +22,11 @@ class App extends Component {
         (user) => {
             if (user) {
                 history.replace("/")
-                this.props.routerStore.setLoggedRoutes()
+                if (user.roleName === 'ROLE_ADMIN') {
+                    this.props.routerStore.setAdminRoutes()
+                } else {
+                    this.props.routerStore.setLoggedRoutes()
+                }
             } else {
                 history.replace("/signin")
                 this.props.routerStore.setAnonymousRoutes()
@@ -51,18 +55,22 @@ class App extends Component {
                         preventScrolling: true
                     }}
                 >
-                    {routes.map(route => (
-                        <NavLink
-                            key={route.path}
-                            as={NavLink}
-                            to={route.path}
-                            activeClassName="active"
-                            exact
+                    {routes.map(route => {
+                        if(!/^Dashboard[A-z]+$/.test(route.name)) {
+                            return <NavLink
+                                key={route.path}
+                                as={NavLink}
+                                to={route.path}
+                                activeClassName="active"
+                                exact
 
-                        >
-                            {route.name}
-                        </NavLink>
-                    ))}
+                            >
+                                {route.name}
+                            </NavLink>
+                        } else {
+                            return ''
+                        }
+                    })}
                 </Navbar>
                 <Container>
                     {routes.map(({ path, Component }) => (

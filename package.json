@@ -10,6 +10,7 @@
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-materialize": "^3.9.2",
+    "react-resize-image": "^1.0.4",
     "react-router-dom": "^5.2.0",
     "react-transition-group": "^4.4.1"
   },
